@@ -1,56 +1,73 @@
-// 함수 타입 지정, void 타입
+// Narrowing & Assertion
 
-// 1. 함수 타입 지정
-//                  ↓ 파라미터 타입 지정
-//                           ↓ return 값 타입 지정
-function func1(x :number) :number { // 파라미터 타입과 return 값의 타입이 number인 함수
-    return x * 2;
-}
-func1(30);
-
-// 2. void 타입 : return 값이 없을 때 사용 → return 값이 생기면 에러 발생
-function func2() :void {
-    1 + 1;
-}
-
-// (참고 1) JS와 다른 점?
-// 1. 타입이 지정된 파라미터는 반드시 사용해야 함
-// func1(); → 에러 발생
-
-// 2. 파라미터가 옵션일 경우? → 파라미터변수? :타입
-// (변수? :number) == (변수 :number | undefined)
-function func3(y? :number) {
-
-}
-
-// (참고 2) 함수 타입 지정 연습
-function sayHello(x? :string) :void {
-    if (x) {
-        console.log("안녕하세요, " + x);
+// 1. Type이 하나로 확정되지 않았을 경우 Type Narrowing(타입을 하나로 확정) 사용
+//  1-1. 대표적인 Narrowing 방법은? typeof 연산자
+function myFunc1(x :number | string) {
+    if (typeof x === "string" ) {
+        console.log(x);
     } else {
-        console.log("이름이 없습니다.");
+        return x + 1;
+    }
+}
+//  1-2. (주의점) if문은 else, else if문으로 마무리하는 것이 에러 방지로 좋음
+function myFunc2(x :number | string) {
+    let arr1 :number[] = [];
+    // Narrowing
+    if (typeof x === "number") {
+        arr1[0] = x;
+    } else {
+        console.log(x);
     }
 }
 
-function len(y :string | number) :number {
-    return y.toString().length;
+// 2. Type Assertion (타입 덮어쓰기)
+//  2-1. 용도는? 
+//   2-1-1. Narrowing할 때 사용(타입을 a에서 b로 변경하는 것이 아님!)
+//    (불가능 예) let var1 :number = 1; 
+//               var1 as string;
+//   2-1-2. 무슨 타입이 들어올 지 100% 확실할 때 사용
+
+function myFunc3(x :number | string) {
+    let arr2 :number[] = [];
+    // Assertion
+    arr2[0] = x as number; // → 왼쪽 변수를 number로 덮어씀
 }
 
-function marry(income :number, house :boolean, charm :string) {
-    let score :number = 0;
-    
-    score = score + income;
-    if (house) {
-        score = score + 500;
-    };
-    if (charm == "상") {
-        score = score + 100;
-    };
+// (참고 1) Narrowing 판정 문법 → 현재 변수의 타입을 특정할 수만 있다면 Narrowing 판정 문법임
+// 1. typeof 변수명
+// 2. 속성명 in 오브젝트자료
+// 3. 인스턴스 instanceof 부모
 
-    if (score >= 600) {
-        return "결혼 가능";
-    };
+// (참고 2) Narrowing 연습
+function toNumber(arr3 :(number | string)[]) {
+    let newArr :number[] = []
 
+    arr3.forEach((b)=>{
+        if (typeof b === 'string') {
+            newArr.push(parseFloat(b))
+        } else {
+            newArr.push(b)
+        }
+      })
+
+    return newArr;
+}
+console.log( toNumber([123, '3']) );
+
+let teacher1 = { subject : "math" };
+let teacher2 = { subject : ["science", "english"] };
+let teacher3 = { hello : "hi" };
+
+function teacher(sub : { subject : string | string[] } ) {
+    if (typeof sub.subject === "string") {
+        return sub.subject;
+    } else if (Array.isArray(sub.subject)) {
+        return sub.subject[sub.subject.length - 1];
+    } else {
+        return "타입 에러!"
+    }
 }
 
-console.log(marry(700, false, '중'));
+console.log( teacher( teacher1 ) );
+console.log( teacher( teacher2 ) );
+// console.log( teacher( teacher3 ) );
