@@ -1,49 +1,45 @@
-// 함수와 methods에 type alias 지정
-// 1. 일반적인 타입 지정
-function example1(a) {
-    return 1;
+// 타입스크립트로 HTML 변경과 조작할 때의 주의점
+// 1. <h4> 텍스트 조작하기
+var text = document.querySelector('#title');
+// 1. narrowing 방법
+//  1-1. if-else문 사용
+if (text != null) {
+    text.innerHTML = "반가워요";
 }
-//  2-2. 함수표현식에만 type alias 사용 가능
-var myFunction = function example2(a) {
-    return 1;
-};
-// 3. object 자료형 안에 함수를 생성할 수 있음... 타입 지정은 어떻게?
-var info1 = {
-    name: 'kim',
-    plusOne: function (a) {
-        return a + 1;
-    },
-    changeName: function () { },
-};
-// (참고 1) 콜백함수?
-function func1(a) {
-    a();
+//  1-2. instanceof 연산자
+if (text instanceof Element) {
+    text.innerHTML = "반가워요";
 }
-function func2() {
+//  1-3. as 키워드(임의 타입으로 간주하기)
+var text2 = document.querySelector('#title');
+text2.innerHTML = "반가워요";
+//  1-4. ?. → text에 innerHTML이 있으면 출력, 없으면 undefined
+//       (optional chaining)
+if ((text === null || text === void 0 ? void 0 : text.innerHTML) != undefined) {
+    text.innerHTML = "반가워요";
 }
-func1(func2); // func2가 콜백함수
-var info2 = {
-    name: 'kim',
-    plusOne: function (a) {
-        return a + 1;
-    },
-    changeName: function () { },
-};
-var cutZero = function cutZero(str) {
-    // 특정 문자 제거하기
-    var newStr = str.replace(/^0+/, '');
-    return newStr;
-};
-var removeDash = function removeDash(str) {
-    // 특정 문자 모두 제거하기(정규식 사용)
-    var newStr = str.replace(/-/g, ''); // → '/'는 정규식의 시작과 끝을 의미, 'g'는 Global Search(전역탐색)을 의미
-    return newStr;
-};
-console.log(cutZero('00123130'));
-console.log(removeDash('----123---zzz------123'));
-function myFunction2(a, func1, func2) {
-    var result = func1(a);
-    var result2 = func2(result);
-    console.log(result2);
+//  1-5. tsconfig.json에서 strict 모드 끄기
+// 2. <a> 태그의 href 속성 변경하기
+var link = document.querySelector('.link');
+// 1. <a> 태그에 필요한 정확한 타입명은 HTMLAnchorElement
+if (link instanceof HTMLAnchorElement) {
+    link.href = "https://kakao.com";
 }
-myFunction2('010-1111-2222', cutZero, removeDash);
+// 3. eventListener 부착하기
+var button = document.querySelector('#button');
+button === null || button === void 0 ? void 0 : button.addEventListener('click', function () {
+    if (button instanceof HTMLButtonElement) {
+        button.innerHTML = "클릭됨";
+    }
+});
+// (참고 1) HTML 조작 연습
+var image = document.querySelector('#image');
+if (image instanceof Image) {
+    image.src = "new.jpg";
+}
+var daum = document.querySelectorAll('.daum');
+daum.forEach(function (a) {
+    if (a instanceof HTMLAnchorElement) {
+        a.href = "https://kakao.com";
+    }
+});
