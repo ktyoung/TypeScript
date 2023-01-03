@@ -1,52 +1,48 @@
-// type alias (타입변수)
+// Literal Types
 
-// 1. 타입 변수 생성 및 사용 → 타입 변수는 영어 대문자로 시작하여 일반 변수와 차이점을 두기
+// (참고 1) Literal Types 장점?
+// 1. 변수의 타입을 더 엄격하게 관리할 수 있음
+// 2. 자동완성
+
+// 1. 더 엄격한 타입 지정 (Literal Types)
 //  1-1. 일반 변수
-type MyType1 = string | number | undefined;
-let var1 :MyType1 = "Hello!";
-//  1-2. object 자료형
-type MyType2 = { name : string, age : number };
-let obj1 = { name : 'kim', age : 20 };
+let userName :'kim'; // → userName 변수에는 'kim'만 들어올 수 있음
+// userName = 123;
+let info :'26' | 'anyang';
+// info = '10';
 
-// 2. type 키워드 여러개를 extend
-//  2-1. OR 연산자를 이용해서 Union type
-type Name = string;
-type Age = number;
-type Person = Name | Age;
-//  2-2. & 기호를 쓴다면 object 안의 두개의 속성을 extend
-type PositionX = { x :number };
-type PositionY = { y :number };
-type Coordinate = PositionX & PositionY; // == { x :number, y :number }
-let position :Coordinate = { x : 10, y : 20 };
-
-// (참고 1) const 변수는 변경할 수 없는 변수
-const city1 = 'seoul';
-// 1. const 변수는 등호로 재할당을 막는 역할... object 수정은 자유롭게 가능
-const city2 = { city : 'anyang' };
-city2.city = 'busan';
-// 2. 타입스크립트는 object 자료 수정을 방지할 수 있다 → readonly 키워드
-type MyType3 = { readonly city :string };
-const city3 :MyType3 = { city : 'daegu' };
-// city3.city = 'goseong'; → readonly 키워드 때문에 에러 발생
-
-// (참고 2) 같은 이름의 type 변수는 재정의 불가능
-type MyType4 = string;
-// type MyType4 = number; → 에러 발생
-
-// (참고 3) type alias 연습
-type Type1 = {
-    color? :string,
-    size : number,
-    readonly position : number[]
+//  1-2. 함수
+function example1(x :'hello') :(1 | 0) {
+    return 1;
+}
+function example2(x :('가위' | '바위' | '보')) :('가위' | '바위' | '보')[] {
+    return ['가위'];
 }
 
-type Type2 = {
-    name :string,
-    phone :number,
-    email :string
+// 2. Literal Types은 const 변수와 유사하게 사용 가능
+//  2-1. Literal Types은 const 변수의 상위 호환 → 한 번에 여러개의 상수를 저장하여 사용할 수 있음!
+const var1 = "hi";
+let var2 :"hi" | "hello";
+
+// 3. Literal Types의 문제점?
+var content = {
+    name :'kim',
+} as const
+
+function myFunction(a :'kim') {
+
 }
 
-type Type3 = {
-    teen :boolean;
-}
-type NewType = Type2 & Type3
+myFunction(content.name); // → 그냥 사용하면 왜 오류가 발생하는가?
+//  3-1. myFunction()의 파라미터는... 'kim'이라는 자료만 들어올 수 있다는 의미가 아니라,
+//       'kim'이라는 타입(string)만 들어올 수 있다는 의미이므로!
+//  3-2. 문제 해결 방법
+//   3-2-1. object 자료형 생성 시 타입 지정을 확실하게
+//   3-2-2. assertion
+//   3-2-3. object 자료형에 as const 사용
+
+// (참고 2) as const 키워드?
+// 1. 이 object는 literal type 지정을 알아서 해달라는 의미
+//    → object value 값을 그대로 타입으로 지정해줌
+// 2. object 속성들에 모두 readonly 붙여줌
+// 3. object 자료를 매우 엄격하게 관리하고 싶다면 활용
