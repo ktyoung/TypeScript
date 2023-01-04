@@ -1,50 +1,70 @@
-// 타입스크립트로 HTML 변경과 조작할 때의 주의점
+// class 타입 지정
 
-// 1. <h4> 텍스트 조작하기
-let text = document.querySelector('#title');
-// 1. narrowing 방법
-//  1-1. if-else문 사용
-if (text != null) {
-    text.innerHTML = "반가워요";
-}
-//  1-2. instanceof 연산자
-if (text instanceof Element) {
-    text.innerHTML = "반가워요";
-}
-//  1-3. as 키워드(임의 타입으로 간주하기)
-let text2 = document.querySelector('#title') as Element;
-text2.innerHTML = "반가워요";
-//  1-4. ?. → text에 innerHTML이 있으면 출력, 없으면 undefined
-//       (optional chaining)
-if (text?.innerHTML != undefined) {
-    text.innerHTML = "반가워요";
-}
-//  1-5. tsconfig.json에서 strict 모드 끄기
+class Person {
+    age :number = 20; // → 필드 타입 지정(자동으로 됨)
 
-// 2. <a> 태그의 href 속성 변경하기
-let link = document.querySelector('.link');
-// 1. <a> 태그에 필요한 정확한 타입명은 HTMLAnchorElement
-if (link instanceof HTMLAnchorElement) {
-    link.href = "https://kakao.com";
-}
-
-// 3. eventListener 부착하기
-let button = document.querySelector('#button');
-button?.addEventListener('click', function(){
-    if (button instanceof HTMLButtonElement) {
-        button.innerHTML = "클릭됨";
+    // typescript constructor()는 필드값에 변수가 있어야 this.변수 사용 가능
+    name :string;
+    constructor(myName :string) { // → constructor 파라미터 타입 지정도 가능, 
+                                  // return 타입 지정할 필요는 없음(항상 object가 복제되므로)
+        this.name = myName;
     }
-})
 
-// (참고 1) HTML 조작 연습
-let image = document.querySelector('#image');
-if (image instanceof Image) {
-    image.src = "new.jpg";
+    // prototype 함수
+    myFunction(a :string) :void {
+        console.log("안녕하세요, " + a);
+    }
 }
 
-let daum = document.querySelectorAll('.daum');
-daum.forEach(a => {
-    if (a instanceof HTMLAnchorElement) {
-        a.href = "https://kakao.com";
-    } 
-});
+let person1 = new Person("kim");
+let person2 = new Person("lee");
+
+console.log(person1);
+console.log(person2);
+
+person1.myFunction("kim");
+person2.myFunction("lee");
+
+// (참고 1) class 타입 지정 연습
+class Car {
+    model :string;
+    price :number;
+
+    constructor(model :string, price :number) {
+        this.model = model;
+        this.price = price;
+    }
+
+    tax() :number {
+        return this.price / 10;
+    }
+}
+
+let car1 = new Car("소나타", 3000);
+console.log(car1);
+console.log(car1.tax());
+
+class Word {
+    num;
+    str;
+
+    constructor(...param) {
+        let nums :number[] = [];
+        let strs :string[] = [];
+
+        for (let i = 0; i < param.length; i++) {
+            if (typeof param[i] === "number") {
+                nums.push(param[i]);
+            } else {
+                strs.push(param[i]);
+            }
+        }
+
+        this.num = nums;
+        this.str = strs;
+    }
+}
+
+let obj = new Word('kim', 3, 5, 'park');
+console.log(obj.num);
+console.log(obj.str);

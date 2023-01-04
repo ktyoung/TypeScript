@@ -1,45 +1,57 @@
-// 타입스크립트로 HTML 변경과 조작할 때의 주의점
-// 1. <h4> 텍스트 조작하기
-var text = document.querySelector('#title');
-// 1. narrowing 방법
-//  1-1. if-else문 사용
-if (text != null) {
-    text.innerHTML = "반가워요";
-}
-//  1-2. instanceof 연산자
-if (text instanceof Element) {
-    text.innerHTML = "반가워요";
-}
-//  1-3. as 키워드(임의 타입으로 간주하기)
-var text2 = document.querySelector('#title');
-text2.innerHTML = "반가워요";
-//  1-4. ?. → text에 innerHTML이 있으면 출력, 없으면 undefined
-//       (optional chaining)
-if ((text === null || text === void 0 ? void 0 : text.innerHTML) != undefined) {
-    text.innerHTML = "반가워요";
-}
-//  1-5. tsconfig.json에서 strict 모드 끄기
-// 2. <a> 태그의 href 속성 변경하기
-var link = document.querySelector('.link');
-// 1. <a> 태그에 필요한 정확한 타입명은 HTMLAnchorElement
-if (link instanceof HTMLAnchorElement) {
-    link.href = "https://kakao.com";
-}
-// 3. eventListener 부착하기
-var button = document.querySelector('#button');
-button === null || button === void 0 ? void 0 : button.addEventListener('click', function () {
-    if (button instanceof HTMLButtonElement) {
-        button.innerHTML = "클릭됨";
+// class 타입 지정
+var Person = /** @class */ (function () {
+    function Person(myName) {
+        this.age = 20; // → 필드 타입 지정(자동으로 됨)
+        // return 타입 지정할 필요는 없음(항상 object가 복제되므로)
+        this.name = myName;
     }
-});
-// (참고 1) HTML 조작 연습
-var image = document.querySelector('#image');
-if (image instanceof Image) {
-    image.src = "new.jpg";
-}
-var daum = document.querySelectorAll('.daum');
-daum.forEach(function (a) {
-    if (a instanceof HTMLAnchorElement) {
-        a.href = "https://kakao.com";
+    // prototype 함수
+    Person.prototype.myFunction = function (a) {
+        console.log("안녕하세요, " + a);
+    };
+    return Person;
+}());
+var person1 = new Person("kim");
+var person2 = new Person("lee");
+console.log(person1);
+console.log(person2);
+person1.myFunction("kim");
+person2.myFunction("lee");
+// (참고 1) class 타입 지정 연습
+var Car = /** @class */ (function () {
+    function Car(model, price) {
+        this.model = model;
+        this.price = price;
     }
-});
+    Car.prototype.tax = function () {
+        return this.price / 10;
+    };
+    return Car;
+}());
+var car1 = new Car("소나타", 3000);
+console.log(car1);
+console.log(car1.tax());
+var Word = /** @class */ (function () {
+    function Word() {
+        var param = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            param[_i] = arguments[_i];
+        }
+        var nums = [];
+        var strs = [];
+        for (var i = 0; i < param.length; i++) {
+            if (typeof param[i] === "number") {
+                nums.push(param[i]);
+            }
+            else {
+                strs.push(param[i]);
+            }
+        }
+        this.num = nums;
+        this.str = strs;
+    }
+    return Word;
+}());
+var obj = new Word('kim', 3, 5, 'park');
+console.log(obj.num);
+console.log(obj.str);
