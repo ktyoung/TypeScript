@@ -19,3 +19,36 @@
     <script src="index.js"></script>
 </body>
 </html>
+
+<!-- (JS) class 키워드 알아보기 -->
+<!-- object 자료형으로 캐릭터들의 정보를 정리 -->
+<script>
+    // 아래처럼 비슷한 object를 많이 만들어야 하는 경우라면? class를 만들어 사용하기!
+    // var nunu = {
+    //     q : 'consume',
+    //     w : 'snowball'
+    // }
+    // var garen = {
+    //     q : 'strike',
+    //     w : 'courage'
+    // }
+    
+    // 클래스는 object 뽑는 기계
+    function Skill(q, w) {
+        // this는 기계로부터 생성되는 object (== instance)
+        this.q = q;
+        this.w = w;
+    }
+    var nunu = new Skill('consume', 'snowball');
+    var garen = new Skill('strike', 'courage');
+    console.log(nunu);
+    console.log(garen);
+
+    // ES6 Class 문법
+    class Hero {
+        constructor(q, w) {
+            this.q = q;
+            this.w = w;
+        }
+    }
+</script>
