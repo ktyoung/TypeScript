@@ -2,7 +2,7 @@
     "compilerOptions": {
    
         "target": "es5",
-        "module": "commonjs",
-        "strictNullChecks": true // null이 들어올 경우 체크해주는 옵션
+        "module": "ESNext",
+        "strictNullChecks": true
     }
 }

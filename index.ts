@@ -1,47 +1,21 @@
-// 접근제한자 활용 연습
-class Test {
-    private static x :number = 10;
-    public static y :number = 20;
+// import export
 
-    addOne(num :number) {
-        Test.x = Test.x + num;
-    }
-    printX() {
-        console.log(Test.x);
-    }
-}
+// 1. import {변수명} from '경로'
+import { userName, userAge, Type, Car, Bike, ObjFunction } from "./a";
 
-let test = new Test();
-test.addOne(3);
-test.addOne(4);
-test.printX();
+console.log(userName, userAge);
+let var1 :Type = 'park';
 
+// 2. namespace (import export 과거 버전)
+//  2-1. TypeScript 타입 변수를 숨기는 문법
 
-class Square {
-    width :number;
-    height :number;
-    color :string;
+// (참고 1) import 옛날 방식
+// /// <reference path="./a.ts" />
 
-    constructor(x :number, y :number, color :string) {
-        this.width = x;
-        this.height = y;
-        this.color = color;
-    }
-    draw() {
-        let rand = Math.random();
-        let newDiv = document.createElement("div");
+// (참고 2) import 연습
+let var3 :Car = { wheel : 4, model : "소나타" };
+let var4 :Bike = { wheel : 2, model : "시티" };
 
-        newDiv.style.width = this.width + "px";
-        newDiv.style.height = this.height + "px";
-        newDiv.style.backgroundColor = this.color;
-        newDiv.style.position = "relative";
-        newDiv.style.top = rand*400 + "px";
-        newDiv.style.left = rand*400 + "px";
-
-        document.body.appendChild(newDiv);
-    }
-}
-let square = new Square(30, 30, "red");
-for (let i = 0; i < 8; i++) {
-    square.draw();
+let objFunction :ObjFunction = function objFunction(a) {
+    console.log(a);
 }
