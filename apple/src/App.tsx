@@ -1,36 +1,45 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './index';
+import { RootState2, increment, decrement, incrementByAmount } from './index2';
+import { Dispatch } from 'redux';
 
-// React + TypeScript
-// 1. npx create-react-app 프로젝트명 --template typescript 
-// 2. .tsx 파일은 .ts와 같지만, jsx 문법을 지원함
-// 3. 알아야 하는 점
-//  3-1. 일반 변수, 함수 생성 시 타입 지정
-let name :string = "kim";
-//  3-2. JSX 표현하는 타입(HTML 요소 타입 지정)
-let box :JSX.Element = <div></div>;
 
+// Redux + TypeScript
+// (참고 1) React에서 Redux 사용하는 이유?
+// 1. 모든 컴포넌트가 state 공유 가능
+// 2. 수정 방법을 파일 한 곳에 정의해둠
+// 3. 버그 수정이 쉬워짐
+
+// 1. (전통방식) 컴포넌트에서 redux에서 만든 state 사용하기
+// function App() {
+//   1-1. useSelector( (state) => state ) 사용
+//   1-2. state 타입 지정은 RootState(index.tsx)에 정의됨
+//   const output = useSelector( (state :RootState) => state )
+//   1-3. dispatch 타입은 redux에서 import한 Dispatch 타입
+//   const dispatch :Dispatch = useDispatch(); // → state 수정 요청
+//   return (
+//     <div>
+//       {output.count}
+//       <button onClick={ () => { dispatch({type : '증가'}) } }>버튼</button>
+//     </div>
+//   );
+// }
+
+
+// 2. (신규방식) 컴포넌트에서 redux에서 만든 state 사용하기
 function App() {
-
-  //  3-6. state 타입 지정
-  let [user, setUser] = useState('kim'); // → 자동으로 타입 지정을 해줌
-  let [age, setAge] = useState<string | number>(20); // → 2개의 타입을 지정할 때는 Generic 문법 사용
-
+  const output = useSelector( (state :RootState2) => state )
+  const dispatch :Dispatch = useDispatch();
   return (
     <div>
-      <h4>안녕하세요, {name}</h4>
-      <Profile name="철수"/>
+      {/* 2-1. 전통방식과 동일하나, slice 등록 시 작명한 이름을 사용해야 함  */}
+      {output.counter1.count}
+      {/* 2-2. index에서 export한 수정 방법을 import 한 뒤 사용 */}
+      <button onClick={ () => { dispatch(increment()) } }>버튼</button>
     </div>
-  );
-}
-
-//  3-3. 컴포넌트 타입 지정(파라미터와 리턴값)
-//  3-4. 컴포넌트 props 타입 지정 → props는 object 자료형으로 담김
-//  3-5. type alias도 당연히 가능함
-function Profile(props :{name :string}) :JSX.Element {
-  return (
-    <div>{props.name}의 프로필입니다.</div>
   );
 }
 
